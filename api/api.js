@@ -42,6 +42,21 @@ app.post("/users", async (req, res) => {
   }
 });
 
+app.delete("/users/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const deleteUser = await knex("users").where({ id: id }).del();
+    if (deleteUser === 0) {
+      return res.status(404).json({ error: "user not found" });
+    } else {
+      res.status(202).send("user successfully removed");
+    }
+  } catch (error) {
+    console.log("failed to delete record: ", error);
+    return res.status(500).json({ error: "failed to delete record" });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`application running using NODE_ENV: ${process.env.NODE_ENV}`);
 });

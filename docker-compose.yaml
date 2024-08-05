@@ -26,6 +26,19 @@ services:
         source: ./api
         target: /app/api
 
+  client:
+    build:
+      context: ./client
+    ports:
+      - 3000:3000
+    depends_on:
+      - api
+      - db
+    volumes:
+      - type: bind
+        source: ./client
+        target: /app/client
+
 # Because we are using volumes we must define those volumes here:
 volumes:
   mine_db-data:
