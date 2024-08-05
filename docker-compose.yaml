@@ -1,0 +1,32 @@
+services:
+  # This next line will declare the source database for all the tables and such
+  db:
+    container_name: pg-docker
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_DB=mine_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - mine_db-data:/var/lib/postgresql/data
+
+  api:
+    container_name: api
+    build:
+      # Context tells docker where to find the relevant Dockerfile in this case it is at the root(.)/api folder
+      context: ./api
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    volumes:
+      - type: bind
+        source: ./api
+        target: /app/api
+
+# Because we are using volumes we must define those volumes here:
+volumes:
+  mine_db-data:
+  # This would be where you define options however for this project we do not need any additional modifications
